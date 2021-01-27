@@ -8,6 +8,7 @@ authors = ["Michael Cooper <macoop2363@gmail.com>"]
 python = "^3.8"
 boto3 = "^1.16.59"
 python-dotenv = "^0.15.0"
+singer-python = "^5.9.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
