@@ -15,9 +15,10 @@ def get_schemas(config):
 
     for tap_stream_id, table_spec in config['tables'].items():
         stream_object = Stream(client, table_spec, None)
+        stream_schema = stream_object.get_schema()
 
         meta = metadata.get_standard_metadata(
-            schema=stream_object.schema,
+            schema=stream_schema,
             key_properties=stream_object.key_properties,
             replication_method=stream_object.replication_method
         )
@@ -31,7 +32,7 @@ def get_schemas(config):
 
         meta = metadata.to_list(meta)
 
-        schemas[tap_stream_id] = stream_object.schema
+        schemas[tap_stream_id] = stream_schema
         schemas_metadata[tap_stream_id] = meta
 
     return schemas, schemas_metadata
