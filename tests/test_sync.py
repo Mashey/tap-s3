@@ -46,5 +46,5 @@ def config():
 def test_sync(config):
     catalog = discover(config)
 
-    sync(config, None, catalog)
+    sync(config, {}, catalog)
     assert True
