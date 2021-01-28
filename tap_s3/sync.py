@@ -9,7 +9,7 @@ def sync(config, state, catalog):
     client = S3Client(config['aws_access_key_id'], config['aws_secret_access_key'])
 
     with Transformer() as transformer:
-        for stream in catalog.get_selected_streams(state):
+        for stream in catalog.streams:
             tap_stream_id   = stream.tap_stream_id
             table_spec      = config['tables'][tap_stream_id]
             stream_obj      = Stream(client, table_spec, state)
@@ -30,6 +30,7 @@ def sync(config, state, catalog):
             )
 
             for record in stream_obj.sync():
+                LOGGER.info(f'Attempting to write {record}')
                 transformed_record = transformer.transform(record, stream_schema, stream_metadata)
                 LOGGER.info(f"Writing record: {transformed_record}")
                 singer.write_record(
