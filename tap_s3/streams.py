@@ -1,4 +1,6 @@
 import csv
+import numpy as np
+import pandas as pd
 import singer
 
 class Stream:
@@ -15,7 +17,6 @@ class Stream:
         self.valid_replication_keys = table_spec['valid_replication_keys']
         self.replication_key        = table_spec['replication_key']
         self.object_type            = table_spec['object_type']
-        self.schema                 = self.get_schema()
 
     def sync(self, *args, **kwargs):
         bucket = self.client.get_bucket(self.bucket_name)
@@ -24,9 +25,8 @@ class Stream:
             self.search_pattern)
 
         for object in objects:
-            with open("configure_column_mapping_logic.csv", "r") as f:
-                reader = csv.DictReader(f)
-                records = list(reader)
+            df = pd.read_csv(object.get()['Body'], index_col=None)
+            records = df.replace({np.nan:None}).to_dict('records')
             for record in records:
                 yield record
             singer.write_state(self.state)
