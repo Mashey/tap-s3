@@ -8,10 +8,10 @@ from .discover import discover
 from .sync import sync
 
 REQUIRED_CONFIG_KEYS = [
-    'aws_access_key_id'
-    'aws_secret_access_key'
-    'start_date'
-    'tables'
+    'aws_access_key_id',
+    'aws_secret_access_key',
+    'start_date',
+    'tables',
 ]
 
 LOGGER = singer.get_logger()
