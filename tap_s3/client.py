@@ -1,4 +1,5 @@
 import boto3
+import numpy as np
 import pandas as pd
 import random
 
@@ -39,9 +40,10 @@ class S3Client:
         # build the most complete json object as possible
         # row data doesn't matter, just types
         json_obj = {}
-        for column, data in df.iteritems():
-            for val in data:
-                if pd.notna:
+        for column, column_vals in df.iteritems():
+            json_obj[column] = None
+            for val in column_vals:
+                if pd.notna(val):
                     json_obj[column] = val
                     break
         
