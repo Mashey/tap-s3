@@ -3,6 +3,9 @@ name = "tap-s3"
 version = "0.1.0"
 description = ""
 authors = ["Michael Cooper <macoop2363@gmail.com>"]
+packages = [
+    { include = "tap_s3" }
+]
 
 [tool.poetry.dependencies]
 python = "^3.8"
