@@ -15,8 +15,10 @@ class S3Client:
     def get_bucket(self, bucket_name):
         return self._s3.Bucket(bucket_name)
 
+
     def get_objects(self, bucket, prefix=''):
         return bucket.objects.filter(Prefix=prefix)
+
 
     def filter_objects_by_pattern(self, objects, pattern):
         objs = []
@@ -24,6 +26,7 @@ class S3Client:
             if pattern in object.key:
                 objs.append(object)
         return objs
+
 
     def get_schema(self, bucket_name, search_prefix, search_pattern, delimiter):
         bucket  = self.get_bucket(bucket_name)
@@ -47,5 +50,5 @@ class S3Client:
                     json_obj[column] = val
                     break
         
-
         return create_json_schema(json_obj)
+        
