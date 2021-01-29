@@ -1,12 +1,6 @@
 import boto3
 from moto import mock_s3
-from tap_s3.client import S3Client
 import pytest
-
-
-@pytest.fixture()
-def client():
-    yield S3Client('AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY')
 
 
 def test_it_creates_a_valid_session(client):

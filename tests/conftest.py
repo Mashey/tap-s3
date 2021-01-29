@@ -1,19 +1,27 @@
 import boto3
+from tap_s3.client import S3Client
 import os
 import pytest
 
-from moto import mock_s3, mock_sqs
+from moto import mock_s3
 
 
 @pytest.fixture
 def aws_credentials():
+    return {
+        "key": "testing_key",
+        "secret": "testing_secret",
+    }
+
+@pytest.fixture
+def setup_aws_credentials(aws_credentials):
     """Mocked AWS Credentials for moto."""
-    os.environ["AWS_ACCESS_KEY_ID"] = "testing_key"
-    os.environ["AWS_SECRET_ACCESS_KEY"] = "testing_secret"
+    os.environ["AWS_ACCESS_KEY_ID"] = aws_credentials['key']
+    os.environ["AWS_SECRET_ACCESS_KEY"] = aws_credentials['secret']
 
 
 @pytest.fixture
-def s3(aws_credentials):
+def s3(setup_aws_credentials):
     with mock_s3():
         session = boto3.Session(region_name='us-east-1')
         yield session.resource('s3')
@@ -98,10 +106,65 @@ def bucket_1(s3, bucket_1_name, people_1_csv_data, people_2_csv_data, houses_1_c
     bucket.put_object(Body=people_1_csv_data, Key='prefix_1/20201123/people.csv')
     bucket.put_object(Body=people_2_csv_data, Key='prefix_1/20201124/people.csv')
     bucket.put_object(Body=houses_1_csv_data, Key='prefix_1/20201123/houses.csv')
-    bucket.put_object(Body=houses_2_csv_data, Key='prefix_2/20201123/houses.csv')
+    bucket.put_object(Body=houses_2_csv_data, Key='prefix_1/20201124/houses.csv')
     yield
 
 
 @pytest.fixture
 def s3_client(s3, bucket_1):
     yield s3
+
+
+@pytest.fixture
+def houses_table_config(bucket_1_name):
+    return {
+        "houses": {
+            "bucket_name": bucket_1_name,
+            "search_prefix": "prefix_1",
+            "search_pattern": "houses.csv",
+            "delimiter": "/",
+            "tap_stream_id": "houses",
+            "primary_key": ["id"],
+            "replication_method": "INCREMENTAL",
+            "valid_replication_keys": [""],
+            "replication_key": "",
+            "object_type": "HOUSE"
+        }
+    }
+
+
+@pytest.fixture
+def people_table_config(bucket_1_name):
+    return {
+        "people": {
+            "bucket_name": bucket_1_name,
+            "search_prefix": "prefix_1",
+            "search_pattern": "people",
+            "delimiter": "/",
+            "tap_stream_id": "people.csv",
+            "primary_key": ["id"],
+            "replication_method": "FULL_TABLE",
+            "valid_replication_keys": [],
+            "replication_key": "",
+            "object_type": "PERSON"
+        }
+    }
+
+
+@pytest.fixture
+def table_configs(people_table_config, house_table_config):
+    return { **people_table_config, **house_table_config }
+
+
+@pytest.fixture
+def test_config(aws_credentials, table_configs):
+    yield {
+        "aws_access_key_id": aws_credentials['key'],
+        "aws_secret_access_key": aws_credentials['secret'],
+        "tables": table_configs
+    }
+
+
+@pytest.fixture()
+def client(aws_credentials):
+    yield S3Client(aws_credentials['key'], aws_credentials['secret'])
