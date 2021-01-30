@@ -44,6 +44,14 @@ def people_2_csv_data():
 
 
 @pytest.fixture
+def people_3_csv_data():
+    return """id,name,age
+    5,dan,10
+    6,ana,
+    """
+
+
+@pytest.fixture
 def people_schema():
     return {
         "type": ["null", "object"],
@@ -55,7 +63,7 @@ def people_schema():
                 "type": ["null", "string"]
             },
             "age": {
-                "type": ["null", "integer"]
+                "type": ["null", "number"]
             }
         }
     }
@@ -101,18 +109,14 @@ def bucket_1_name():
 
 
 @pytest.fixture
-def bucket_1(s3, bucket_1_name, people_1_csv_data, people_2_csv_data, houses_1_csv_data, houses_2_csv_data):
+def bucket_1(s3, bucket_1_name, people_1_csv_data, people_2_csv_data, people_3_csv_data, houses_1_csv_data, houses_2_csv_data):
     bucket = s3.create_bucket(Bucket=bucket_1_name)
     bucket.put_object(Body=people_1_csv_data, Key='prefix_1/20201123/people.csv')
     bucket.put_object(Body=people_2_csv_data, Key='prefix_1/20201124/people.csv')
+    bucket.put_object(Body=people_3_csv_data, Key='prefix_1/20201125/people.csv')
     bucket.put_object(Body=houses_1_csv_data, Key='prefix_1/20201123/houses.csv')
     bucket.put_object(Body=houses_2_csv_data, Key='prefix_1/20201124/houses.csv')
     yield
-
-
-@pytest.fixture
-def s3_client(s3, bucket_1):
-    yield s3
 
 
 @pytest.fixture

@@ -3,6 +3,10 @@ from moto import mock_s3
 import pytest
 
 
+@pytest.fixture
+def s3_client(s3, bucket_1):
+    yield s3
+
 def test_it_creates_a_valid_session(client):
     assert type(client._session) == boto3.Session
     assert client._s3 is not None
