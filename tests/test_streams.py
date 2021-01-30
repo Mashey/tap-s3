@@ -1,6 +1,3 @@
-from tests.conftest import table_configs
-import boto3
-import os
 import pytest
 
 from tap_s3.streams import Stream
