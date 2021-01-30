@@ -1,3 +1,4 @@
+from _pytest.fixtures import pytest_fixture_setup
 import boto3
 from tap_s3.client import S3Client
 import os
@@ -104,6 +105,75 @@ def houses_schema():
 
 
 @pytest.fixture
+def houses_schema_metadata():
+    return {
+        'houses': [
+            {
+                'breadcrumb': (),
+                'metadata': {
+                    'forced-replication-method': 'INCREMENTAL',
+                    'inclusion': 'available',
+                    'table-key-properties': ['id'],
+                    'valid-replication-keys': ['']
+                }
+            },
+            {
+                'breadcrumb': ('properties', 'id'),
+                'metadata': {'inclusion': 'automatic'}},
+            {
+                'breadcrumb': ('properties', 'person_id'),
+                'metadata': {'inclusion': 'available'}},
+            {
+                'breadcrumb': ('properties', 'state'),
+                'metadata': {'inclusion': 'available'}
+            }
+        ]
+    }
+
+
+@pytest.fixture
+def people_schema_metadata():
+    return {
+        'people': [
+            {
+                'breadcrumb': (),
+                'metadata': {
+                    'forced-replication-method': 'FULL_TABLE',
+                    'inclusion': 'available',
+                    'table-key-properties': ['id']
+                }
+            },
+            {
+                'breadcrumb': ('properties', 'id'),
+                'metadata': {'inclusion': 'automatic'}
+            },
+            {
+                'breadcrumb': ('properties', 'name'),
+                'metadata': {'inclusion': 'available'}
+            },
+            {
+                'breadcrumb': ('properties', 'age'),
+                'metadata': {'inclusion': 'available'}
+            }
+        ]
+    }
+
+
+@pytest.fixture
+def schemas_metadata(people_schema_metadata, houses_schema_metadata):
+    return { **people_schema_metadata, **houses_schema_metadata }
+
+
+@pytest.fixture
+def schemas(people_schema, houses_schema):
+    return { 
+        'people': people_schema, 
+        'houses': houses_schema 
+    }
+
+
+
+@pytest.fixture
 def bucket_1_name():
     return 'test_bucket_1'
 
@@ -156,12 +226,12 @@ def people_table_config(bucket_1_name):
 
 
 @pytest.fixture
-def table_configs(people_table_config, house_table_config):
-    return { **people_table_config, **house_table_config }
+def table_configs(people_table_config, houses_table_config):
+    return { **people_table_config, **houses_table_config }
 
 
 @pytest.fixture
-def test_config(aws_credentials, table_configs):
+def config(aws_credentials, table_configs):
     yield {
         "aws_access_key_id": aws_credentials['key'],
         "aws_secret_access_key": aws_credentials['secret'],
