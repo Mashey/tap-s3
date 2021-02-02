@@ -215,7 +215,7 @@ def people_table_config(bucket_1_name):
             "search_prefix": "prefix_1",
             "search_pattern": "people",
             "delimiter": "/",
-            "tap_stream_id": "people.csv",
+            "tap_stream_id": "people",
             "primary_key": ["id"],
             "replication_method": "FULL_TABLE",
             "valid_replication_keys": [],
@@ -235,6 +235,7 @@ def config(aws_credentials, table_configs):
     yield {
         "aws_access_key_id": aws_credentials['key'],
         "aws_secret_access_key": aws_credentials['secret'],
+        "start_date": "2020-08-21T00:00:00Z",
         "tables": table_configs
     }
 
