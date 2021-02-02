@@ -27,6 +27,13 @@ class S3Client:
                 objs.append(object)
         return objs
 
+    def get_updated_objects(self, objects, last_modified):
+        objs = []
+        for object in objects:
+            if object.last_modified >= last_modified:
+                objs.append(object)
+        return objs
+
 
     def get_schema(self, bucket_name, search_prefix, search_pattern, delimiter):
         bucket  = self.get_bucket(bucket_name)

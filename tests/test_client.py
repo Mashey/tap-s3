@@ -1,6 +1,8 @@
 import boto3
 from moto import mock_s3
 import pytest
+from datetime import datetime
+from dateutil.tz import tzutc
 
 
 @pytest.fixture
@@ -24,6 +26,19 @@ def test_get_objects(bucket_1_name, s3_client, client):
 
     filtered_objects = client.get_objects(bucket, 'prefix_1')
     assert list(filtered_objects) == list(s3_client.Bucket(bucket_1_name).objects.filter(Prefix='prefix_1'))
+
+
+def test_get_updated_objects(bucket_1_name, s3_client, client):
+    last_modified = datetime(2021, 1, 1, 0, 0, 0, tzinfo=tzutc())
+    bucket = client.get_bucket(bucket_1_name)
+    unfiltered_objects = client.get_objects(bucket)
+    objects = client.get_updated_objects(unfiltered_objects, last_modified)
+    assert objects == list(s3_client.Bucket(bucket_1_name).objects.all())
+
+    last_modified = datetime(2100, 1, 1, 0, 0, 0, 0, tzinfo=tzutc())
+    objects = client.get_updated_objects(unfiltered_objects, last_modified)
+    assert len(objects) == 0
+
 
 
 def test_get_schema(s3_client, bucket_1_name, people_schema, client):
