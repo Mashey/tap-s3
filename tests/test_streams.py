@@ -1,3 +1,5 @@
+from datetime import datetime
+from dateutil.tz import tzutc
 import pytest
 
 from tap_s3.streams import Stream
@@ -66,6 +68,11 @@ def test_get_schema(s3_client, stream, people_schema):
 
 
 def test_sync(s3_client, stream, records):
-    sync_records = list(stream.sync())
+    last_modified = datetime(2021, 1, 1, 0, 0, 0, tzinfo=tzutc())
+    sync_records = list(stream.sync(last_modified))
     assert sync_records == records
+
+    last_modified = datetime(2100, 1, 1, 0, 0, 0, tzinfo=tzutc())
+    sync_records = list(stream.sync(last_modified))
+    assert len(sync_records) == 0
     

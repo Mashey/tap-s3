@@ -18,11 +18,12 @@ class Stream:
         self.replication_key        = table_spec['replication_key']
         self.object_type            = table_spec['object_type']
 
-    def sync(self, *args, **kwargs):
+    def sync(self, last_modified, *args, **kwargs):
         bucket = self.client.get_bucket(self.bucket_name)
         objects = self.client.filter_objects_by_pattern(
             self.client.get_objects(bucket, self.search_prefix),
             self.search_pattern)
+        objects = self.client.get_updated_objects(objects, last_modified)
 
         for object in objects:
             df = pd.read_csv(object.get()['Body'], index_col=None)
