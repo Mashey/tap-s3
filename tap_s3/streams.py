@@ -30,7 +30,13 @@ class Stream:
             records = df.replace({np.nan:None}).to_dict('records')
             for record in records:
                 yield record
-            singer.write_state(self.state)
+
+        singer.write_bookmark(
+            self.state,
+            self.tap_stream_id,
+            'last_modified',
+            singer.utils.strftime(singer.utils.now(), format_str=singer.utils.DATETIME_PARSE))
+        singer.write_state(self.state)
             
 
     def get_schema(self):
