@@ -1,6 +1,7 @@
 {
     "aws_access_key_id": "key",
     "aws_secret_access_key": "secret",
+    "start_date": "2020-08-21T00:00:00Z",
     "tables": {
         "people": {
             "bucket_name": "bucket_name",
