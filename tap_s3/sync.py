@@ -29,7 +29,14 @@ def sync(config, state, catalog):
                 stream.replication_key
             )
 
-            for record in stream_obj.sync():
+            last_modified = singer.utils.strptime_with_tz(
+                singer.get_bookmark(
+                    state,
+                    tap_stream_id,
+                    'last_modified',
+                    config['start_date']))
+
+            for record in stream_obj.sync(last_modified):
                 LOGGER.info(f'Attempting to write {record}')
                 transformed_record = transformer.transform(record, stream_schema, stream_metadata)
                 LOGGER.info(f"Writing record: {transformed_record}")
@@ -37,7 +44,12 @@ def sync(config, state, catalog):
                     tap_stream_id,
                     transformed_record,
                 )
-            state = singer.clear_bookmark(state, tap_stream_id, 'cursor')
+
+            singer.write_bookmark(
+                state,
+                tap_stream_id,
+                'last_modified',
+                singer.utils.strftime(singer.utils.now(), format_str=singer.utils.DATETIME_PARSE))
             singer.write_state(state)
 
     state = singer.set_currently_syncing(state, None)
