@@ -1,6 +1,7 @@
 import csv
 import numpy as np
 import pandas as pd
+import janitor
 import singer
 
 class Stream:
@@ -26,7 +27,7 @@ class Stream:
         objects = self.client.get_updated_objects(objects, last_modified)
 
         for object in objects:
-            df = pd.read_csv(object.get()['Body'], index_col=None)
+            df = pd.read_csv(object.get()['Body'], index_col=None).clean_names(remove_special=True)
             records = df.replace({np.nan:None}).to_dict('records')
             for record in records:
                 yield record

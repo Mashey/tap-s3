@@ -44,7 +44,7 @@ class S3Client:
         # read objects as dataframe
         dfs = []
         for obj in objects:
-            dfs.append(pd.read_csv(obj.get()['Body'], index_col=None))
+            dfs.append(pd.read_csv(obj.get()['Body'], index_col=None).clean_names(remove_special=True))
         df = pd.concat(dfs, ignore_index=True)
         
         # build the most complete json object as possible
