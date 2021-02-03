@@ -31,7 +31,7 @@ def create_object_property(obj={}):
     for key, value in obj.items():
         value_type = property_types().get(
                 type(value),
-                create_none_property)(value)
+                create_string_property)(value)
         key_property = {
             key: value_type
         }
@@ -46,7 +46,7 @@ def create_array_property(items=[]):
     item = next(iter(items))
     instance['items'] = property_types().get(
             type(item),
-            create_none_property)(item)
+            create_string_property)(item)
     return instance
 
 def create_json_schema(object):
