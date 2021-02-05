@@ -2,11 +2,12 @@ from .client import S3Client
 
 import json
 
-from singer import metadata
+from singer import metadata, get_logger
 from singer.catalog import Catalog
 
 from .streams import Stream
 
+LOGGER = get_logger()
 
 def get_schemas(config):
     schemas = {}
@@ -14,6 +15,7 @@ def get_schemas(config):
     client = S3Client(config['aws_access_key_id'], config['aws_secret_access_key'])
 
     for tap_stream_id, table_spec in config['tables'].items():
+        LOGGER.info(f'Starting discovery for {tap_stream_id}')
         stream_object = Stream(client, table_spec, None)
         stream_schema = stream_object.get_schema()
 

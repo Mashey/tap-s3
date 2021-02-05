@@ -37,7 +37,7 @@ def sync(config, state, catalog):
                     config['start_date']))
 
             for record in stream_obj.sync(last_modified):
-                LOGGER.info(f'Attempting to write {record}')
+                LOGGER.debug(f'Attempting to write {record}')
                 transformed_record = transformer.transform(record, stream_schema, stream_metadata)
                 LOGGER.info(f"Writing record: {transformed_record}")
                 singer.write_record(
