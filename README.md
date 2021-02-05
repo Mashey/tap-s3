@@ -31,7 +31,8 @@ Here is an example of basic config, and a bit of a run down on each of the prope
         "people": {
             "bucket_name": "bucket_name",
             "search_prefix": "prefix",
-            "search_pattern": "people.csv",
+            "search_pattern": "people",
+            "file_type": "csv",
             "delimiter": "/",
             "tap_stream_id": "people",
             "primary_key": ["id"],
@@ -43,7 +44,8 @@ Here is an example of basic config, and a bit of a run down on each of the prope
         "houses": {
             "bucket_name": "bucket_name",
             "search_prefix": "prefix_1",
-            "search_pattern": "houses.csv",
+            "search_pattern": "houses",
+            "file_type": "csv",
             "delimiter": "/",
             "tap_stream_id": "houses",
             "primary_key": ["id"],
@@ -79,6 +81,7 @@ Here is an example of basic config, and a bit of a run down on each of the prope
 - **bucket_name**: This is the name of the bucket in which the objects reside.
 - **search_prefix**: This is a prefix to apply after the bucket, but before the file search pattern, to allow you to find files in "directories" below the bucket.
 - **search_pattern**: This is based on the key of the object you wish to retrieve.
+- **file_type**: This is the file extention of the object you wish to read. **Currently only csv file extensions are supported**
 - **delimiter**: This allows you to specify a custom delimiter, such as `\t` or `|`, if that applies to your files. **Currently not used.**
 - **tap_stream_id**: The name of the tap stream and the name of the resulting table. This should be unique within this tap.
 - **primary_key**: The primary key(s) for the stream.
