@@ -24,13 +24,16 @@ def clean_dataframe(df):
             raw_value = column_vals[valid_value_index]
             inferred_type = infer_type(raw_value)
         if inferred_type == int:
-            casted_vals = []
-            for val in column_vals:
-                if pd.notna(val):
-                    casted_vals.append(int(val))
-                else:
-                    casted_vals.append(val)
-            df[column] = pd.Series(casted_vals, dtype=pd.Int64Dtype())
+            try:
+                casted_vals = []
+                for val in column_vals:
+                    if pd.notna(val):
+                        casted_vals.append(int(val))
+                    else:
+                        casted_vals.append(val)
+                df[column] = pd.Series(casted_vals, dtype=pd.Int64Dtype())
+            except:
+                df = df.astype({column: float})
         elif inferred_type == float:
             df = df.astype({column: float})
         else:
