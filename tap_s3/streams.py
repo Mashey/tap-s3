@@ -27,8 +27,8 @@ class Stream:
             self.search_pattern)
         objects = self.client.get_updated_objects(objects, last_modified)
 
-        for object in objects:
-            df = pd.read_csv(object.get()['Body'], index_col=None, keep_default_na=False).clean_names(remove_special=True)
+        if self.file_type == 'csv':
+            df = self.client.read_csv_objects(objects)
             records = df.replace({np.nan:None}).to_dict('records')
             for record in records:
                 yield record
