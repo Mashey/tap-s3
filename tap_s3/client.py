@@ -63,5 +63,11 @@ class S3Client:
         dfs = []
         for obj in objects:
             dfs.append(pd.read_csv(obj.get()['Body'], index_col=None, dtype=str).clean_names(remove_special=True))
-        return clean_dataframe(pd.concat(dfs, ignore_index=True))
+        if len(dfs) <= 1:
+            try:
+                return clean_dataframe(dfs[0])
+            except IndexError:
+                return pd.DataFrame()
+        else:
+            return clean_dataframe(pd.concat(dfs, ignore_index=True))
 
