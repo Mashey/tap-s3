@@ -64,7 +64,7 @@ def people_schema():
                 "type": ["null", "string"]
             },
             "age": {
-                "type": ["null", "number"]
+                "type": ["null", "integer"]
             }
         }
     }
@@ -195,7 +195,8 @@ def houses_table_config(bucket_1_name):
         "houses": {
             "bucket_name": bucket_1_name,
             "search_prefix": "prefix_1",
-            "search_pattern": "houses.csv",
+            "search_pattern": "houses",
+            "file_type": 'csv',
             "delimiter": "/",
             "tap_stream_id": "houses",
             "primary_key": ["id"],
@@ -214,6 +215,7 @@ def people_table_config(bucket_1_name):
             "bucket_name": bucket_1_name,
             "search_prefix": "prefix_1",
             "search_pattern": "people",
+            "file_type": 'csv',
             "delimiter": "/",
             "tap_stream_id": "people",
             "primary_key": ["id"],

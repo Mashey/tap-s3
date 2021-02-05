@@ -20,7 +20,7 @@ def people_csv_data():
 @pytest.fixture
 def records():
     return [
-        {'id': 0, 'name': 'dan', 'age': 10.0},
+        {'id': 0, 'name': 'dan', 'age': 10},
         {'id': 1, 'name': 'ana', 'age': None}
     ]
 
@@ -54,6 +54,7 @@ def test_initialization(stream, client, table_spec, state):
     assert stream.bucket_name == table_spec['bucket_name']
     assert stream.search_prefix == table_spec['search_prefix']
     assert stream.search_pattern == table_spec['search_pattern']
+    assert stream.file_type == table_spec['file_type']
     assert stream.delimiter == table_spec['delimiter']
     assert stream.tap_stream_id == table_spec['tap_stream_id']
     assert stream.key_properties == table_spec['primary_key']

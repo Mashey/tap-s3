@@ -11,6 +11,7 @@ class Stream:
         self.bucket_name            = table_spec['bucket_name']
         self.search_prefix          = table_spec['search_prefix']
         self.search_pattern         = table_spec['search_pattern']
+        self.file_type              = table_spec['file_type']
         self.delimiter              = table_spec['delimiter']
         self.tap_stream_id          = table_spec['tap_stream_id']
         self.key_properties         = table_spec['primary_key']
@@ -27,7 +28,7 @@ class Stream:
         objects = self.client.get_updated_objects(objects, last_modified)
 
         for object in objects:
-            df = pd.read_csv(object.get()['Body'], index_col=None).clean_names(remove_special=True)
+            df = pd.read_csv(object.get()['Body'], index_col=None, keep_default_na=False).clean_names(remove_special=True)
             records = df.replace({np.nan:None}).to_dict('records')
             for record in records:
                 yield record
@@ -38,5 +39,6 @@ class Stream:
             self.bucket_name,
             self.search_prefix,
             self.search_pattern,
+            self.file_type,
             self.delimiter
         )
