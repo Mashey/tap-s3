@@ -46,5 +46,6 @@ def test_get_schema(s3_client, bucket_1_name, people_schema, client):
         bucket_1_name,
         'prefix_1',
         'people',
+        'csv',
         '/')
     assert schema == people_schema

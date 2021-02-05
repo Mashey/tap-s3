@@ -1,9 +1,8 @@
 import boto3
-import numpy as np
 import pandas as pd
-import random
 
-from .schema_builder import create_json_schema
+from .utils import clean_dataframe, create_json_schema
+
 
 class S3Client:
     def __init__(self, aws_access_key_id, aws_secret_access_key):
@@ -35,27 +34,34 @@ class S3Client:
         return objs
 
 
-    def get_schema(self, bucket_name, search_prefix, search_pattern, delimiter):
+    def get_schema(self, bucket_name, search_prefix, search_pattern, file_type, delimiter):
         bucket  = self.get_bucket(bucket_name)
         objects = self.filter_objects_by_pattern(
             self.get_objects(bucket, search_prefix),
             search_pattern)
         
-        # read objects as dataframe
-        dfs = []
-        for obj in objects:
-            dfs.append(pd.read_csv(obj.get()['Body'], index_col=None).clean_names(remove_special=True))
-        df = pd.concat(dfs, ignore_index=True)
-        
+        df = None
+        if file_type == 'csv':
+            df = self.read_csv_objects(objects)
+
+
         # build the most complete json object as possible
         # row data doesn't matter, just types
         json_obj = {}
         for column, column_vals in df.iteritems():
             json_obj[column] = None
-            for val in column_vals:
-                if pd.notna(val):
-                    json_obj[column] = val
-                    break
+            value = ''
+            valid_value_index = column_vals.first_valid_index()
+            if valid_value_index is not None:
+                value = column_vals[valid_value_index]
+            json_obj[column] = value
         
         return create_json_schema(json_obj)
-        
+
+    
+    def read_csv_objects(self, objects):
+        dfs = []
+        for obj in objects:
+            dfs.append(pd.read_csv(obj.get()['Body'], index_col=None, dtype=str).clean_names(remove_special=True))
+        return clean_dataframe(pd.concat(dfs, ignore_index=True))
+
