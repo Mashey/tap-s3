@@ -67,12 +67,13 @@ def test_create_none_property():
 def create_object_property_test_inputs():
     return [
         (
-            {"name": "Bob", "age": 100},
+            {"name": "Bob", "age": 100, 'is_active': True},
             {
                 "type": ["null", "object"],
                 "properties": {
                     "name": {"type": ['null', 'string']},
-                    "age": {"type": ['null', 'integer']}
+                    "age": {"type": ['null', 'integer']},
+                    "is_active": {"type": ['null', 'boolean']}
                 }
             }
         ),

@@ -60,6 +60,7 @@ def property_types():
         np.float64: create_number_property,
         str: create_string_property,
         bool: create_boolean_property,
+        np.bool_: create_boolean_property,
         dict: create_object_property,
         list: create_array_property
     }
