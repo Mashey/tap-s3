@@ -7,18 +7,18 @@ from tap_s3.utils import *
 
 @pytest.fixture
 def people_csv_data():
-    return """id,name,age,cash
-    0,dan,10,11.0
-    1,ana,,50.4
-    2,,13,1.1
+    return """id,name,age,cash,is_active
+    0,dan,10,11.0,true
+    1,ana,,50.4,false
+    2,,13,1.1,false
     """
 
 @pytest.fixture
 def records():
     return [
-        {'id': 0, 'name': 'dan', 'age': 10, 'cash': 11.0},
-        {'id': 1, 'name': 'ana', 'age': None, 'cash': 50.4},
-        {'id': 2, 'name': None, 'age': 13, 'cash': 1.1}
+        {'id': 0, 'name': 'dan', 'age': 10, 'cash': 11.0, 'is_active': True},
+        {'id': 1, 'name': 'ana', 'age': None, 'cash': 50.4, 'is_active': False},
+        {'id': 2, 'name': None, 'age': 13, 'cash': 1.1, 'is_active': False}
     ]
 
 @pytest.fixture
@@ -36,6 +36,12 @@ def test_infer():
     assert infer_type('1Hello') == str
     assert infer_type('He11o') == str
     assert infer_type('') == str
+    assert infer_type('true') == bool
+    assert infer_type('false') == bool
+    assert infer_type('True') == bool
+    assert infer_type('False') == bool
+    assert infer_type('tRue') == str
+    assert infer_type('FalSE') == str
 
 def test_clean_dataframe(raw_people_df, records):
     cleaned_df = clean_dataframe(raw_people_df)

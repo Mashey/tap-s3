@@ -1,6 +1,12 @@
 import numpy as np
 import pandas as pd
 
+BOOLEAN_VALUES = {
+    'true': True,
+    'True': True,
+    'false': False,
+    'False': False
+}
 
 def infer_type(data):
     try:
@@ -13,7 +19,10 @@ def infer_type(data):
         return float
     except (ValueError, TypeError):
         pass
-    return str
+    if data in BOOLEAN_VALUES:
+        return bool
+    else:
+        return str
 
 
 def clean_dataframe(df):
@@ -36,6 +45,8 @@ def clean_dataframe(df):
                 df = df.astype({column: float})
         elif inferred_type == float:
             df = df.astype({column: float})
+        elif inferred_type == bool:
+            df[column] = df[column].map(BOOLEAN_VALUES)
         else:
             pass
     return df
