@@ -10,7 +10,7 @@ def people_csv_data():
     return """id,name,age,cash,is_active
     0,dan,10,11.0,true
     1,ana,,50.4,false
-    2,,13,1.1,false
+    2,,13,1.1,
     """
 
 @pytest.fixture
@@ -18,7 +18,7 @@ def records():
     return [
         {'id': 0, 'name': 'dan', 'age': 10, 'cash': 11.0, 'is_active': True},
         {'id': 1, 'name': 'ana', 'age': None, 'cash': 50.4, 'is_active': False},
-        {'id': 2, 'name': None, 'age': 13, 'cash': 1.1, 'is_active': False}
+        {'id': 2, 'name': None, 'age': 13, 'cash': 1.1, 'is_active': None}
     ]
 
 @pytest.fixture
