@@ -30,25 +30,25 @@ def s3(setup_aws_credentials):
 
 @pytest.fixture
 def people_1_csv_data():
-    return """id,name,age,is_active
-    0,bob,50,true
-    1,jane,32,false
+    return """id,name,age,cash,is_active,phone
+    0,bob,50,10.0,true,5555451234
+    1,jane,32,10.5,false,None
     """
 
 
 @pytest.fixture
 def people_2_csv_data():
-    return """id,name,age,is_active
-    3,bill,33,true
-    4,jill,35,false
+    return """id,name,age,cash,is_active,phone
+    3,bill,33,3.3,true,555-123-1223
+    4,jill,35,7.0,false,555-321-2222
     """
 
 
 @pytest.fixture
 def people_3_csv_data():
-    return """id,name,age,is_active
-    5,dan,10,true
-    6,ana,,false
+    return """id,name,age,cash,is_active,phone
+    5,dan,10,,true,1115455555
+    6,ana,,151.0,false,5559874321
     """
 
 
@@ -66,8 +66,14 @@ def people_schema():
             "age": {
                 "type": ["null", "integer"]
             },
+            "cash": {
+                "type": ["null", "number"]
+            },
             'is_active': {
                 "type": ["null", "boolean"]
+            },
+            'phone': {
+                "type": ["null", "string"]
             }
         }
     }
@@ -159,7 +165,15 @@ def people_schema_metadata():
                 'metadata': {'inclusion': 'available'}
             },
             {
+                'breadcrumb': ('properties', 'cash'),
+                'metadata': {'inclusion': 'available'}
+            },
+            {
                 'breadcrumb': ('properties', 'is_active'),
+                'metadata': {'inclusion': 'available'}
+            },
+            {
+                'breadcrumb': ('properties', 'phone'),
                 'metadata': {'inclusion': 'available'}
             }
         ]

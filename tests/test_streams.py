@@ -11,17 +11,17 @@ def table_spec(people_table_config):
 
 @pytest.fixture
 def people_csv_data():
-    return """id,name,age,is_active
-    0,dan,10,True
-    1,ana,,False
+    return """id,name,age,cash,is_active,phone
+    0,dan,10,50.4,True,5555551234
+    1,ana,,7.1,False,555-123-7777
     """
 
 
 @pytest.fixture
 def records():
     return [
-        {'id': 0, 'name': 'dan', 'age': 10, 'is_active': True},
-        {'id': 1, 'name': 'ana', 'age': None, 'is_active': False}
+        {'id': 0, 'name': 'dan', 'age': 10, 'cash': 50.4, 'is_active': True},
+        {'id': 1, 'name': 'ana', 'age': None, 'cash': 7.1, 'is_active': False}
     ]
 
 

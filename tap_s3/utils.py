@@ -32,26 +32,34 @@ def clean_dataframe(df):
         if valid_value_index is not None:
             raw_value = column_vals[valid_value_index]
             inferred_type = infer_type(raw_value)
-        if inferred_type == int:
+        df = convert_data(df, column, inferred_type)
+    return df
+
+
+def convert_data(df, column, type):
+    if type == int:
+        try:
+            casted_vals = []
+            for val in df[column]:
+                if pd.notna(val):
+                    casted_vals.append(int(val))
+                else:
+                    casted_vals.append(val)
+            df[column] = pd.Series(casted_vals, dtype=pd.Int64Dtype())
+        except:
             try:
-                casted_vals = []
-                for val in column_vals:
-                    if pd.notna(val):
-                        casted_vals.append(int(val))
-                    else:
-                        casted_vals.append(val)
-                df[column] = pd.Series(casted_vals, dtype=pd.Int64Dtype())
-            except:
-                df = df.astype({column: float})
-        elif inferred_type == float:
-            try:
                 df = df.astype({column: float})
             except:
-                pass
-        elif inferred_type == bool:
-            df[column] = df[column].map(BOOLEAN_VALUES)
-        else:
+                pass       
+    elif type == float:
+        try:
+            df = df.astype({column: float})
+        except:
             pass
+    elif type == bool:
+        df[column] = df[column].map(BOOLEAN_VALUES)
+    else:
+        return df
     return df
 
 

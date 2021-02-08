@@ -7,18 +7,18 @@ from tap_s3.utils import *
 
 @pytest.fixture
 def people_csv_data():
-    return """id,name,age,cash,is_active
-    0,dan,10,11.0,true
-    1,ana,,50.4,false
-    2,,13,1.1,
+    return """id,name,age,cash,is_active,phone
+    0,dan,10,11.0,true,5555451234
+    1,ana,,50.4,false,555-545-1234
+    2,,13,1.1,,5559994321
     """
 
 @pytest.fixture
 def records():
     return [
-        {'id': 0, 'name': 'dan', 'age': 10, 'cash': 11.0, 'is_active': True},
-        {'id': 1, 'name': 'ana', 'age': None, 'cash': 50.4, 'is_active': False},
-        {'id': 2, 'name': None, 'age': 13, 'cash': 1.1, 'is_active': None}
+        {'id': 0, 'name': 'dan', 'age': 10, 'cash': 11.0, 'is_active': True, 'phone': '5555451234'},
+        {'id': 1, 'name': 'ana', 'age': None, 'cash': 50.4, 'is_active': False, 'phone': '555-545-1234'},
+        {'id': 2, 'name': None, 'age': 13, 'cash': 1.1, 'is_active': None, 'phone': '5559994321'}
     ]
 
 @pytest.fixture
