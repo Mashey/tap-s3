@@ -30,25 +30,25 @@ def s3(setup_aws_credentials):
 
 @pytest.fixture
 def people_1_csv_data():
-    return """id,name,age
-    0,bob,50
-    1,jane,32
+    return """id,name,age,is_active
+    0,bob,50,true
+    1,jane,32,false
     """
 
 
 @pytest.fixture
 def people_2_csv_data():
-    return """id,name,age
-    3,bill,33
-    4,jill,35
+    return """id,name,age,is_active
+    3,bill,33,true
+    4,jill,35,false
     """
 
 
 @pytest.fixture
 def people_3_csv_data():
-    return """id,name,age
-    5,dan,10
-    6,ana,
+    return """id,name,age,is_active
+    5,dan,10,true
+    6,ana,,false
     """
 
 
@@ -65,6 +65,9 @@ def people_schema():
             },
             "age": {
                 "type": ["null", "integer"]
+            },
+            'is_active': {
+                "type": ["null", "boolean"]
             }
         }
     }
@@ -153,6 +156,10 @@ def people_schema_metadata():
             },
             {
                 'breadcrumb': ('properties', 'age'),
+                'metadata': {'inclusion': 'available'}
+            },
+            {
+                'breadcrumb': ('properties', 'is_active'),
                 'metadata': {'inclusion': 'available'}
             }
         ]

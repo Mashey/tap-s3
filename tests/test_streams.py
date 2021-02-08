@@ -11,9 +11,9 @@ def table_spec(people_table_config):
 
 @pytest.fixture
 def people_csv_data():
-    return """id,name,age
-    0,dan,10
-    1,ana,
+    return """id,name,age,is_active
+    0,dan,10,True
+    1,ana,,False
     """
 
 
