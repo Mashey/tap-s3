@@ -44,7 +44,10 @@ def clean_dataframe(df):
             except:
                 df = df.astype({column: float})
         elif inferred_type == float:
-            df = df.astype({column: float})
+            try:
+                df = df.astype({column: float})
+            except:
+                pass
         elif inferred_type == bool:
             df[column] = df[column].map(BOOLEAN_VALUES)
         else:
