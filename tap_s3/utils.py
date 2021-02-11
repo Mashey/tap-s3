@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import os
 
 BOOLEAN_VALUES = {
     'true': True,
@@ -124,3 +125,8 @@ def create_array_property(items=[]):
 
 def create_json_schema(object):
     return create_object_property(object)
+
+
+def get_abs_path(path):
+    return os.path.join(os.path.dirname(os.path.realpath(__file__)), path)
+
