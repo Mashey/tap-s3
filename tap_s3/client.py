@@ -71,3 +71,12 @@ class S3Client:
         else:
             return clean_dataframe(pd.concat(dfs, ignore_index=True))
 
+        
+    def read_json_objects(self, objects):
+        json_objs = []
+        for obj in objects:
+            raw_data = json.loads(obj.get()['Body'].read())
+            menus = raw_data['menus']
+            json_objs.extend(menus)
+        return json_objs
+
