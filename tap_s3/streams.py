@@ -32,6 +32,11 @@ class Stream:
             records = df.replace({np.nan:None}).to_dict('records')
             for record in records:
                 yield record
+
+        if self.file_type == 'json':
+            records = self.client.read_json_objects(objects)
+            for record in records:
+                yield record
             
 
     def get_schema(self):
