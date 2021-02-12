@@ -97,7 +97,7 @@
                                                 "type": ["string", "null"]
                                             },
                                             "guid": {
-                                            "   type": ["string", "null"]
+                                                "type": ["string", "null"]
                                             },
                                             "minSelections": {
                                                 "type": ["integer", "null"]
