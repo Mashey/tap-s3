@@ -1,7 +1,8 @@
 import boto3
+import json
 import pandas as pd
 
-from .utils import clean_dataframe, create_json_schema
+from .utils import clean_dataframe, create_json_schema, get_abs_path
 
 
 class S3Client:
@@ -43,6 +44,10 @@ class S3Client:
         df = None
         if file_type == 'csv':
             df = self.read_csv_objects(objects)
+
+        if file_type == 'json':
+            with open(get_abs_path('schemas/menu_export.json')) as f:
+                return json.load(f)
 
 
         # build the most complete json object as possible
